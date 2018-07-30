@@ -3,7 +3,7 @@
 
 
 ## 效果图如下:
-![](https://github.com/baixxx/VerticalMarqueeView/raw/master/resource/marqueeview.gif)  
+![](https://github.com/yogkin/VerticalMarqueeView/blob/master/gif/1.gif)  
 
 
 
@@ -12,8 +12,10 @@
 | :----------: | :-----------:  | 
 | mvInterval	     | 文字滚动间隔时间 |
 | mvAnimaDuration	 | 动画持续时间 |
-| mvTextSize	| 文字大小  |
-| mvTextColor | 文字颜色  |
+| mvLeftTextSize	| 左侧文字大小  |
+| mvLeftTextColor | 左侧文字颜色  |
+| mvRightTextColor | 右侧文字颜色  |
+| mvRightTextColor | 右侧文字颜色  |
 
 
 
