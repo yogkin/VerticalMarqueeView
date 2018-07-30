@@ -7,6 +7,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.ViewFlipper;
 
@@ -27,13 +28,22 @@ public class MarqueeView extends ViewFlipper {
      */
     private int mvAnimDuration;
     /**
-     * 文字大小
+     * 左侧文字大小
      */
-    private int mvTextSize;
+    private int mvLeftTextSize;
     /**
-     * 文字颜色
+     * 右侧文字大小
      */
-    private int mvTextColor;
+    private int mvRightTextSize;
+    /**
+     * 左侧文字颜色
+     */
+    private int mvLeftTextColor;
+    /**
+     * 右侧文字颜色
+     */
+    private int mvRightTextColor;
+
     private Context context;
     /**
      * 当前消息位置
@@ -55,11 +65,13 @@ public class MarqueeView extends ViewFlipper {
 
     private void init(Context context,AttributeSet attrs){
         this.context = context;
-        TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.MarqueeViewStyle);
-        mvInterval = typedArray.getInteger(R.styleable.MarqueeViewStyle_mvInterval,mvInterval);
-        mvAnimDuration = typedArray.getInteger(R.styleable.MarqueeViewStyle_mvAnimDuration,mvAnimDuration);
-        mvTextSize = (int) typedArray.getDimension(R.styleable.MarqueeViewStyle_mvTextSize,mvTextSize);
-        mvTextColor = typedArray.getColor(R.styleable.MarqueeViewStyle_mvTextColor,mvTextColor);
+        TypedArray typedArray = context.obtainStyledAttributes(attrs,R.styleable.MarqueeView);
+        mvInterval = typedArray.getInteger(R.styleable.MarqueeView_mvInterval,mvInterval);
+        mvAnimDuration = typedArray.getInteger(R.styleable.MarqueeView_mvAnimDuration,mvAnimDuration);
+        mvLeftTextSize = (int) typedArray.getDimension(R.styleable.MarqueeView_mvLeftTextSize, mvLeftTextSize);
+        mvRightTextSize = (int) typedArray.getDimension(R.styleable.MarqueeView_mvRightTextSize, mvRightTextSize);
+        mvLeftTextColor = typedArray.getColor(R.styleable.MarqueeView_mvLeftTextColor, mvLeftTextColor);
+        mvRightTextColor = typedArray.getColor(R.styleable.MarqueeView_mvRightTextColor, mvRightTextColor);
         typedArray.recycle();
         setFlipInterval(mvInterval);
     }
@@ -68,7 +80,7 @@ public class MarqueeView extends ViewFlipper {
      *
      * @param notices 滚动的消息列表
      */
-    public void startMarquee(final List<? extends Object> notices){
+    public void startMarquee(final List<? extends NoticeBean> notices){
         if (notices!=null&&notices.size()>0){
             //开启滚动,耗时异步处理
             post(new Runnable() {
@@ -93,10 +105,19 @@ public class MarqueeView extends ViewFlipper {
 
                             @Override
                             public void onAnimationEnd(Animation animation) {
-                                position++;
-                                if (position >= notices.size()) {
-                                    position = 0;
+                                position = position+2;
+
+                                if (notices.size()%2==0) {
+                                    if (position >= notices.size()) {
+                                        position = 0;
+                                    }
+                                }else {
+                                    if (position > notices.size()) {
+                                        position = 0;
+                                    }
                                 }
+
+
                                 View view = createTextView(position,notices);
                                 if (view.getParent() == null) {
                                     addView(view);
@@ -120,13 +141,41 @@ public class MarqueeView extends ViewFlipper {
      * @param notices 消息列表
      * @return 创建textview
      */
-    private TextView createTextView(int pos,List<? extends Object> notices){
-        TextView textView = new TextView(context);
-        textView.setText(notices.get(pos).toString());
-        textView.setTextSize(mvTextSize);
-        textView.setTextColor(mvTextColor);
-        textView.setGravity(Gravity.CENTER_VERTICAL);
-        return textView;
+    private View createTextView(int pos,List<? extends NoticeBean> notices){
+
+        LinearLayout layout = new LinearLayout(context);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setGravity(Gravity.CENTER_VERTICAL);
+        for (int i = 0; i < 2; i++) {
+
+            //判断是否符合添加要求,有可能只需要添加一个
+            if (pos+i==notices.size()) {
+                break;
+            }
+
+            LinearLayout linearLayout = new LinearLayout(context);
+            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+            TextView leftTextView = new TextView(context);
+            leftTextView.setText(notices.get(pos+i).getLeftString());
+            leftTextView.setTextSize(mvLeftTextSize);
+            leftTextView.setTextColor(mvLeftTextColor);
+            leftTextView.setGravity(Gravity.CENTER_VERTICAL);
+
+            TextView rightTextView = new TextView(context);
+            rightTextView.setText(notices.get(pos+i).getRightString());
+            rightTextView.setTextSize(mvRightTextSize);
+            rightTextView.setTextColor(mvRightTextColor);
+            rightTextView.setGravity(Gravity.CENTER_VERTICAL);
+            rightTextView.setPadding(10,0,0,0);
+
+            linearLayout.addView(leftTextView);
+            linearLayout.addView(rightTextView);
+            layout.addView(linearLayout);
+        }
+
+
+        return layout;
     }
 
     /**

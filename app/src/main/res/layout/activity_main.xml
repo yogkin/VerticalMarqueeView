@@ -20,9 +20,12 @@
         android:layout_height="match_parent"
         android:paddingLeft="20dp"
         app:mvInterval="1500"
-        app:mvTextColor="#000"
+        app:mvLeftTextColor="#000"
+        app:mvLeftTextSize="4sp"
+        app:mvRightTextColor="@android:color/darker_gray"
+        app:mvRightTextSize="4sp"
         app:mvAnimDuration="800"
-        app:mvTextSize="5sp">
+        >
     </com.bx.marqueeviewlibrary.MarqueeView>
 
 </LinearLayout>
