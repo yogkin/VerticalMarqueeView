@@ -27,9 +27,9 @@
         android:layout_height="match_parent"
         android:paddingLeft="20dp"
         app:mvInterval="1500"
-        app:mvTextColor="#000"
+        app:mvLeftTextColor="#000"
         app:mvAnimDuration="800"
-        app:mvTextSize="5sp">
+        app:mvLeftTextSize="5sp">
     </com.bx.marqueeviewlibrary.MarqueeView>
 ```
 
@@ -47,7 +47,7 @@ allprojects {
 ### 第 2 步、在应用的 build.gradle 中添加：
 ```
 dependencies {
-	        compile 'com.github.baixxx:VerticalMarqueeView:v1.3'
+	       implementation 'com.github.yogkin:VerticalMarqueeView:v1.4'
 	}
  ```
  
